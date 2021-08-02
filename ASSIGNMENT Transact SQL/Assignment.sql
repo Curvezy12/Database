@@ -109,7 +109,7 @@ BEGIN
     END CATCH;
      
 END;
--- PRINT 'Number of rows deleted is ' + CAST(@@ROWCOUNT as char(3));
+PRINT 'Number of rows deleted is ' + CAST(@@ROWCOUNT as char(3));
 
 -- GET CUSTOMER STRING --
 IF OBJECT_ID('GET_CUSTOMER_STRING') IS NOT NULL
