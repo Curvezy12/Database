@@ -31,7 +31,7 @@ BEGIN
     DECLARE @no1 INT,  @no2 INT;
     SET @no1 = 1;
     SET @no2 = 5;
-    SELECT CONCAT('The sum of ' + @no1 + ' and ' + @no2 + ' is ', dbo.[ADD](@no1,@no2));
+    SELECT CONCAT('The sum of ',  @no1, ' and ', @no2 , ' is ', dbo.[ADD](@no1,@no2));
 END;
 
 ----------------------------------------------
@@ -61,11 +61,31 @@ CREATE TABLE LOG (
     FOREIGN KEY (RecAcct) REFERENCES ACCOUNT
 );
 
-CREATE PROCEDURE TESTNAME
-BEGIN
+INSERT INTO Account (AcctNo, Fname, Lname, CreditLimit, Balance)
+VALUES  (530, 'Lachlin', 'Row', 1000, 600),
+        (531, 'Michael', 'Reave', 1000, 350),
+        (532, 'Sophie', 'Green', 1500, 3200);
 
+SELECT * FROM ACCOUNT
+
+
+GO
+CREATE PROCEDURE TESTNAME @FromAccountNumber INT, @ToAccountNumber INT, @Amount INT AS
+
+BEGIN
+    UPDATE ACCOUNT
+    SET Balance = Balance - @Amount
+    WHERE AcctNo = @FromAccountNumber
+
+    UPDATE ACCOUNT
+    SET Balance = Balance + @Amount
+    WHERE AcctNo = @ToAccountNumber
+
+    INSERT INTO LOG (OrigAcct, LogDateTime, RecAcct, Amount)
+    VALUES (@FromAccountNumber, SYSDATETIME(), @ToAccountNumber, @Amount);
 
 
 END;
 
-EXEC TESTNAME
+EXEC TESTNAME @FromAccountNumber = 530, @ToAccountNumber = 531, @Amount = 400;
+SELECT * FROM LOG
